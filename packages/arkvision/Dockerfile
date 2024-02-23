@@ -1,5 +1,5 @@
 #---
-# name: ouster
+# name: arkvision
 # group: sensors
 # depends: [ros:humble-desktop]
 #---
