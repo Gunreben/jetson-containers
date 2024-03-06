@@ -43,16 +43,28 @@ ENV RMW_IMPLEMENTATION=rmw_fastrtps_cpp
 # Installiere notwendige Pakete
 RUN apt-get update && apt-get install -y \
     git \
+    cmake \
     build-essential \
     python3-colcon-common-extensions \
     && rm -rf /var/lib/apt/lists/*
 
+# Install gstreamer for rtsp support
+RUN apt-get install libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libgstreamer-plugins-bad1.0-dev gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-tools gstreamer1.0-x gstreamer1.0-alsa gstreamer1.0-gl gstreamer1.0-gtk3 gstreamer1.0-qt5 gstreamer1.0-pulseaudio
+
+# Clone the OpenCV Python repo, build, and install
+RUN cd /etc/ \
+    && git clone --recursive https://github.com/skvark/opencv-python.git \
+    && cd opencv-python \
+    && export CMAKE_ARGS="-DWITH_GSTREAMER=ON" \
+    && pip install --upgrade pip wheel \
+    && pip wheel . --verbose \
+    && pip install /etc/opencv-python/dist/opencv_python*.whl
 
 #Clone Ouster ROS2 packet
 RUN mkdir -p /ros_ws/src && cd /ros_ws/src \
     && git clone https://github.com/Gunreben/arkvision_six_cameras.git
     
-# Installieren der benötigten Pakete
+
 RUN apt-get update && apt-get install -y \
     libgrpc++-dev \
     protobuf-compiler-grpc \

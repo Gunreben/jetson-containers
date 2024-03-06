@@ -8,3 +8,7 @@ logs
 test/data
 runner
 *.minus-github-api
+build/
+install/
+log/
+
