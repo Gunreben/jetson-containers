@@ -44,7 +44,8 @@ RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 1
 ENV RMW_IMPLEMENTATION=rmw_fastrtps_cpp
 
 
-RUN apt-get install -y \
+RUN . ${ROS_ROOT}/install/setup.bash \
+    apt-get install -y \
     build-essential         \
     libeigen3-dev           \
     libjsoncpp-dev          \
@@ -55,14 +56,15 @@ RUN apt-get install -y \
     git \
     && rm -rf /var/lib/apt/lists/*
 
-RUN apt install -y             \
+RUN apt-get update && \
+    apt --fix-broken install -y             \
     ros-${ROS_DISTRO}-pcl-ros     \
     ros-${ROS_DISTRO}-tf2-eigen   \
     ros-${ROS_DISTRO}-rviz2
 
 #Clone Ouster ROS2 packet
 RUN mkdir -p /ros_ws/src && cd /ros_ws/src \
-    && git clone -b ros2 --recurse-submodules https://github.com/ouster-lidar/ouster-ros.git
+    && git clone -b ros2 --recurse-submodules https://github.com/Gunreben/ouster-ros/tree/ros2
     
 # Installieren der benötigten Pakete
 RUN . ${ROS_ROOT}/install/setup.bash \
