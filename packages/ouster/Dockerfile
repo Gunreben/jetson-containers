@@ -64,7 +64,7 @@ RUN apt-get update && \
 
 #Clone Ouster ROS2 packet
 RUN mkdir -p /ros_ws/src && cd /ros_ws/src \
-    && git clone -b ros2 --recurse-submodules https://github.com/Gunreben/ouster-ros/tree/ros2
+    && git clone -b ros2 --recurse-submodules https://github.com/Gunreben/ouster-ros.git
     
 # Installieren der benötigten Pakete
 RUN . ${ROS_ROOT}/install/setup.bash \

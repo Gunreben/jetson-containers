@@ -1,3 +1,5 @@
+
+
 #!/usr/bin/env python3
 #
 # Container build system for managing package configurations and multi-stage build chains, with automated testing and dependency tracking. 
@@ -52,6 +54,7 @@ parser.add_argument('--push', type=str, default='', help="repo or user to push b
 parser.add_argument('--logs', type=str, default='', help="sets the directory to save container build logs to (default: jetson-containers/logs)")
 parser.add_argument('--verbose', action='store_true', help="enable verbose/debug logging")
 parser.add_argument('--no-github-api', action='store_true', help="disalbe Github API use to force rebuild on new git commits")
+parser.add_argument('--no-cache', type=str, default='' , help="Disable cache (e.g. clone all git repos with current commit")
 
 args = parser.parse_args()
 

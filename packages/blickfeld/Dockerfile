@@ -53,7 +53,7 @@ RUN apt-get update && apt-get install -y \
 # Klonen des Blickfeld-ROS-Pakets
 RUN mkdir -p /ros_ws/src \
     && cd /ros_ws/src \
-    && git clone https://github.com/Blickfeld/blickfeld_qb2_ros2_driver.git
+    && git clone https://github.com/Gunreben/blickfeld_qb2_ros2_driver.git
 
 # Installieren der benötigten Pakete
 RUN . ${ROS_ROOT}/install/setup.bash \
