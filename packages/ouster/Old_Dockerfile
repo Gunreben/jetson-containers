@@ -43,33 +43,33 @@ RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 1
 # https://github.com/ros2/rclcpp/issues/1335
 ENV RMW_IMPLEMENTATION=rmw_fastrtps_cpp
 
-
-RUN apt-get install -y \
-    build-essential         \
-    libeigen3-dev           \
-    libjsoncpp-dev          \
-    libspdlog-dev           \
-    libcurl4-openssl-dev    \
-    cmake                   \
-    python3-colcon-common-extensions \
+# Installiere notwendige Pakete
+RUN apt-get update && apt-get install -y \
     git \
+    build-essential \
+    python3-colcon-common-extensions \
     && rm -rf /var/lib/apt/lists/*
 
-RUN apt install -y             \
-    ros-${ROS_DISTRO}-pcl-ros     \
-    ros-${ROS_DISTRO}-tf2-eigen   \
-    ros-${ROS_DISTRO}-rviz2
 
 #Clone Ouster ROS2 packet
 RUN mkdir -p /ros_ws/src && cd /ros_ws/src \
-    && git clone -b ros2 --recurse-submodules https://github.com/ouster-lidar/ouster-ros.git
+    && git clone https://github.com/ros-drivers/ros2_ouster_drivers 
     
 # Installieren der benötigten Pakete
-RUN . ${ROS_ROOT}/install/setup.bash \
+RUN apt-get update && apt-get install -y \
+    libgrpc++-dev \
+    protobuf-compiler-grpc \
+    libtins-dev \ 
+    libprotobuf-dev \
+    && . ${ROS_ROOT}/install/setup.bash \
     && rm -rf /var/lib/apt/lists/* \
     && cd /ros_ws/ \
-    && colcon build --symlink-install --cmake-clean-first --cmake-args -DCMAKE_BUILD_TYPE=Release
+    && colcon build --symlink-install --cmake-clean-first
 
+RUN . ${ROS_ROOT}/install/setup.bash \
+    && sed -i 's/lidar_ip: 10.5.5.96/lidar_ip: '"$OUSTER_OS0_IP"'/' /ros_ws/src/ros2_ouster_drivers/ros2_ouster/params/driver_config.yaml
+RUN . ${ROS_ROOT}/install/setup.bash \
+    && sed -i 's/computer_ip: 10.5.5.1/computer_ip: '"$JETSON_IP"'/' /ros_ws/src/ros2_ouster_drivers/ros2_ouster/params/driver_config.yaml
 
 # commands will be appended/run by the entrypoint which sources the ROS environment
 COPY ros_entrypoint.sh /ros_entrypoint.sh
